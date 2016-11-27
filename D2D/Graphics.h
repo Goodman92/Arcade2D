@@ -1,19 +1,18 @@
 #pragma once
-// Modify the following definitions if you need to target a platform prior to the ones specified below.
-// Refer to MSDN for the latest info on corresponding values for different platforms.
-#ifndef WINVER              // Allow use of features specific to Windows 7 or later.
-#define WINVER 0x0700       // Change this to the appropriate value to target other versions of Windows.
+
+#ifndef WINVER              // windows =<7
+#define WINVER 0x0700       // koska UWP ja ympäristönä w7
 #endif
 
-#ifndef _WIN32_WINNT        // Allow use of features specific to Windows 7 or later.
-#define _WIN32_WINNT 0x0700 // Change this to the appropriate value to target other versions of Windows.
+#ifndef _WIN32_WINNT        // windows =<7
+#define _WIN32_WINNT 0x0700 // koska UWP ja ympäristönä w7
 #endif
 
 #ifndef UNICODE
 #define UNICODE
 #endif
 
-#define WIN32_LEAN_AND_MEAN     // Exclude rarely-used items from Windows headers
+#define WIN32_LEAN_AND_MEAN     // MSDN poistetaan turhat
 
 #include <windows.h>
 

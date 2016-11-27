@@ -168,10 +168,6 @@
     <ClInclude Include="Tilegenerator.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Image.jpg" />
-    <Image Include="Image.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
