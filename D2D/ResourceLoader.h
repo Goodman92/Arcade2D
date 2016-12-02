@@ -6,6 +6,7 @@ namespace GoodmanEngine
 	public:
 		ResourceLoader();
 		ID2D1Bitmap* loadImageFromFile(PCWSTR uri);
+		inline HWND getWindowsHandle();
 		inline Graphics* getGraphics();
 		void drawText(const WCHAR* str);
 	private:
@@ -15,6 +16,9 @@ namespace GoodmanEngine
 
 	};
 
+	HWND ResourceLoader::getWindowsHandle() {
+		return m_pGraphics->getWindowHandle();
+	}
 	ResourceLoader::ResourceLoader() {
 		m_pGraphics = GoodmanEngine::Graphics::getInstance();
 		m_pBmp = NULL;
@@ -90,7 +94,12 @@ namespace GoodmanEngine
 		if (pConverter) {
 			pConverter->Release();
 		}
-
+		if (pStream)
+			pStream->Release();
+		if (pScaler)
+			pScaler->Release();
+		if (wicFactory)
+			wicFactory->Release();
 		return m_pBmp;
 	}
 

@@ -14,9 +14,13 @@ public:
 	inline void resetClock();
 	inline double getClockRate();
 
-private:
+	double getDifferenceInMS() {
+		auto k = std::chrono::duration_cast<std::chrono::milliseconds>(tick - start).count();
+		return k;
+	}
 	timePoint start;
 	timePoint tick;
+private:
 	timePoint step;
 	double clockRate;
 };
@@ -43,5 +47,6 @@ double GameTimer::delta() {
 }
 
 void GameTimer::resetClock() {
+	clockTick();
 	start = tick;
 }

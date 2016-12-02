@@ -18,7 +18,7 @@ public:
 private:
 	//Baselevel baselevel;
 	HINSTANCE m_instance;
-	HWND m_hwnd;
+	//HWND m_hwnd;
 	Baselevel* m_level;
 	GameTimer m_timer;
 	Keyboard m_keyboard;
@@ -64,24 +64,24 @@ HRESULT Game::Initialize()
 
 		m_pGraphics->getFactory()->GetDesktopDpi(&dpiX, &dpiY);
 
-		m_hwnd = CreateWindow(
+		m_pGraphics->m_hwnd = CreateWindow(
 			L"GoodmanEngine",
 			L"paskaap",
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
 			static_cast<UINT>(ceil(640.f * dpiX / 96.f)),
-			static_cast<UINT>(ceil(480.f * dpiY / 96.f)),
+			static_cast<UINT>(ceil(490.f * dpiY / 96.f)),
 			NULL,
 			NULL,
 			m_instance,
 			this
 		);
-		hr = m_hwnd ? S_OK : E_FAIL;
+		hr = m_pGraphics->m_hwnd ? S_OK : E_FAIL;
 		if (SUCCEEDED(hr))
 		{
-			ShowWindow(m_hwnd, SW_SHOWNORMAL);
-			UpdateWindow(m_hwnd);
+			ShowWindow(m_pGraphics->m_hwnd, SW_SHOWNORMAL);
+			UpdateWindow(m_pGraphics->m_hwnd);
 		}
 	}
 
@@ -94,7 +94,7 @@ void Game::RunMessageLoop()
 
 	//proto
 	m_level = factory(1);
-	m_pGraphics->CreateDeviceResources(m_hwnd);
+	m_pGraphics->CreateDeviceResources(m_pGraphics->m_hwnd);
 
 	PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 	while (msg.message != WM_QUIT) {
@@ -102,11 +102,12 @@ void Game::RunMessageLoop()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-			if (m_timer.delta() >= m_timer.getClockRate()) {
-				m_level->run();
-				m_timer.resetClock();
-			}
-			m_timer.clockTick();
+
+		if (m_timer.delta() >= m_timer.getClockRate()) {
+			m_level->run();
+			m_timer.resetClock();
+		}
+		m_timer.clockTick();
 	}
 
 }
@@ -142,7 +143,8 @@ LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 			/*
 			case WM_CHAR:
 				OutputDebugString(L"WM_CHAR");
-				break;*/
+			break;
+			*/
 			case WM_DISPLAYCHANGE:
 			{
 				InvalidateRect(hwnd, NULL, FALSE);
@@ -162,7 +164,6 @@ LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 
 			case WM_KEYDOWN:
 			{
-
 				auto key = engine->m_keyboard.handleInput(wParam);
 				if (key == KEYSTROKES::multikeys) {
 					engine->m_level->handleMultiKeyStrokes(engine->m_keyboard.getPressedKeys());

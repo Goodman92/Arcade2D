@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include <chrono>
 
 class Maincharacter : public Character {
 public:
@@ -18,9 +19,11 @@ public:
 	void stopMotion();
 	bool isWalking;
 private:
+	double jumptime;
 	void switchImage();
 	bool isDucking;
 	bool isJumping;
+	bool apu;
 	int direction;
 	void initializeSpriteFromFile();
 	void initializeAnimation();
@@ -28,24 +31,33 @@ private:
 	std::vector<std::string> animationKeys;
 	int animationIndex;
 	GameTimer m_timer;
+	GameTimer animationtimer;
 };
 
-Maincharacter::Maincharacter(PCWSTR img = L"") : Character(img), isDucking(false), isWalking(false), animationIndex(0) {
+Maincharacter::Maincharacter(PCWSTR img = L"") : Character(img), animationIndex(0) {
+	jumptime = 2000;
+	isDucking = isWalking = isJumping = apu =false;
 	initializeSpriteFromFile();
 	initializeAnimation();
 	switchImage();
 }
 
 void Maincharacter::motion(std::string mot) {
+	apu = true;
 	isDucking = mot == "duck" ? true : false;
+	isJumping = mot == "jump" ? true : false;
+	animationtimer.resetClock();
 	auto e = movements.find(mot);
 	setDim(stod(e->second[0]), stod(e->second[1]), stod(e->second[2]), stod(e->second[3]));
 }
 
 void Maincharacter::stopMotion() {
-	isDucking = isJumping = false;
-	animationIndex = 0;
-	switchImage();
+	//isDucking = isJumping = false;
+	isDucking = false;
+	if(!isJumping) {
+		animationIndex = 0;
+		switchImage();
+	}
 }
 
 void Maincharacter::initializeSpriteFromFile() {
@@ -76,24 +88,35 @@ void Maincharacter::initializeAnimation() {
 }
 
 void Maincharacter::resetAnimation() {
-	isWalking = isDucking = isJumping = false;
-	animationIndex = 0;
-	switchImage();
+	isWalking = isDucking = false;
+	if(!isJumping) {
+		animationIndex = 0;
+		switchImage();
+	}
 }
 
 void Maincharacter::animate() {
-	if(!isDucking && isWalking) {
-		if (m_timer.delta() >= m_timer.getClockRate()) {
-			if (animationIndex < animationKeys.size()) {
-				switchImage();
-				animationIndex++;
-			}
-			else {
-				animationIndex = 0;
-			}
-			m_timer.resetClock();
+
+	if(!isDucking && isWalking && !isJumping) {
+		if (animationIndex < animationKeys.size()) {
+			switchImage();
+			animationIndex++;		
 		}
-		m_timer.clockTick();
+		else {
+			animationIndex = 0;
+		}
+	}
+
+	if (animationtimer.delta() <= 1) {
+		if (isJumping) {
+			y -= 4.0f;
+			animationtimer.clockTick();
+		}
+		else {
+			isJumping = false;
+			animationtimer.resetClock();
+		}
+		
 	}
 }
 

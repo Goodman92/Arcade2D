@@ -47,12 +47,16 @@ namespace GoodmanEngine {
 		inline ID2D1Factory* getFactory();
 		inline ID2D1HwndRenderTarget* getRenderTarget();
 		static Graphics* getInstance();
+		HWND m_hwnd;
+
+		bool getWindowsDimensions(RECT& rc) {
+			return GetWindowRect(m_hwnd, &rc);
+		}
 
 	private:
 		static Graphics* instance;
 		Graphics();
 		~Graphics();
-		HWND m_hwnd;
 		ID2D1Factory *m_pD2DFactory;
 		ID2D1HwndRenderTarget *m_pRenderTarget;
 
@@ -94,7 +98,6 @@ namespace GoodmanEngine {
 		{
 			RECT rc;
 			GetClientRect(m_hwnd, &rc);
-
 			D2D1_SIZE_U size = D2D1::SizeU(
 				rc.right - rc.left,
 				rc.bottom - rc.top

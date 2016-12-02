@@ -19,19 +19,27 @@ private:
 	Maincharacter m_maincharacter;
 	std::vector<Character*> m_character;
 	Debugger m_debug;
+	RECT rc;
+	int d;
 };
 
-Testlevel::Testlevel() : Baselevel(), m_map(0.0f, 0.0f, L"bg_grasslands.png"), m_maincharacter(L"p1_spritesheet.png") {
+Testlevel::Testlevel() : Baselevel(), m_map(0.0f, 0.0f, L"bg_shroom.png"), m_maincharacter(L"p1_spritesheet.png") {
+	m_scene.fionalisti(rc);
+	m_map.setRect(rc);
+	m_maincharacter.y = 490 - 70 * 3 - 72;
 }
-//älä lataa kuvaa koko ajan (?)
+// CACHEE BITMAPIT!!!!!!!!!!!!
 void Testlevel::run() {
 	m_scene.startDrawing();
-	m_debug.debugInt(m_maincharacter.getX());
 	m_scene.drawBackground(m_map.getBgImage(), m_map.getHorizontalPosition(), m_map.getVerticalPosition());
 	m_maincharacter.animate();
 	m_map.scroll();
 	m_scene.drawImage(m_maincharacter.getImg(), m_maincharacter.x, m_maincharacter.y, m_maincharacter.getX(), m_maincharacter.getY(), m_maincharacter.getXW(), m_maincharacter.getYH());
-	
+	m_map.initializeTiles();
+	auto tiles = m_map.getTilePositions();
+	for (auto o : tiles) {
+		m_scene.drawImage(L"tiles_spritesheet.png", o.at(0), o.at(1), 576, 864, o.at(2), 70);
+	}
 	m_scene.endDrawing();
 }
 
