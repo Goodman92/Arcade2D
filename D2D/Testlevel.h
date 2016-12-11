@@ -94,6 +94,7 @@ void Testlevel::run() {
 
 		int hasTile = m_map.hasTile((int)round(verticalMovementInTiles), (int)round(horizontalMovementInTiles));
 		
+
 		if (tileSurface && hasTile == 1) {
 			m_maincharacter.isJumping = false;
 		}
