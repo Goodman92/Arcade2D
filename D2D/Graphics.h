@@ -34,6 +34,28 @@
 #pragma comment(lib, "Dwrite")
 #pragma comment(lib, "windowscodecs")
 
+struct Dimensions {
+	Dimensions() {
+		m_x = m_xw = m_y = m_yh = 0.0f;
+	}
+	float m_x;  //piirtoaloitus x-koord
+	float m_y;	//piirtoaloitus y-koord
+	float m_xw;	//kuvan leveys
+	float m_yh; //kuvan korkeus
+};
+
+struct ComponentPlacement {
+	ComponentPlacement() {
+		m_x = m_xw = m_y = m_yh = x = y = 0.0f;
+	}
+	float x;  //sijainti x-koord
+	float y;  //sijainti y-koord
+	float m_x;  //piirtoaloitus x-koord
+	float m_y;	//piirtoaloitus y-koord
+	float m_xw;	//kuvan leveys
+	float m_yh; //kuvan korkeus
+};
+
 namespace GoodmanEngine {
 	class Graphics {
 
@@ -50,7 +72,7 @@ namespace GoodmanEngine {
 		HWND m_hwnd;
 
 		bool getWindowsDimensions(RECT& rc) {
-			return GetWindowRect(m_hwnd, &rc);
+			return GetClientRect(m_hwnd, &rc);
 		}
 
 	private:

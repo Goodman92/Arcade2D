@@ -1,38 +1,28 @@
 #pragma once
 
-struct Dimensions {
-	Dimensions() {
-		m_x = m_xw = m_y = m_yh = 0.0f;
-	}
-	float m_x;
-	float m_y;
-	float m_xw;
-	float m_yh;
-};
-
-class Character {
+class Character : public GameComponent {
 public:
 	Character(PCWSTR img);
-	inline float getX();
-	inline float getY();
-	inline float getXW();
-	inline float getYH();
-	inline PCWSTR getImg();
-	void animate();
-	void setX(float x);
-	void setY(float y);
+	inline ComponentPlacement getDimensions();
+	PCWSTR getImage();
+	virtual void animate() = 0;
 	void setDim(float x, float y, float xw, float yh);
 	float x, y;
+	ComponentPlacement m_placement;
 private:
 	Dimensions dim;
 	PCWSTR m_image;
 };
 
+ComponentPlacement Character::getDimensions() {
+	return m_placement;
+}
+
 void Character::setDim(float x, float y, float xw, float yh) {
-	dim.m_x = x;
-	dim.m_xw = xw;
-	dim.m_y = y;
-	dim.m_yh = yh;
+	m_placement.m_x = x;
+	m_placement.m_xw = xw;
+	m_placement.m_y = y;
+	m_placement.m_yh = yh;
 }
 
 Character::Character(PCWSTR img = L"") {
@@ -40,30 +30,6 @@ Character::Character(PCWSTR img = L"") {
 	m_image = img;
 }
 
-float Character::getX() {
-	return dim.m_x;
-}
-
-float Character::getY() {
-	return dim.m_y;
-}
-
-float Character::getXW() {
-	return dim.m_xw;
-}
-
-float Character::getYH() {
-	return dim.m_yh;
-}
-
-PCWSTR Character::getImg() {
+PCWSTR Character::getImage() {
 	return m_image;
-}
-
-void Character::setX(float x) {
-	dim.m_x = x;
-}
-
-void Character::setY(float y) {
-	dim.m_y = y;
 }

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Graphics.h"
 #include "Keyboard.h"
 #include "GameTimer.h"

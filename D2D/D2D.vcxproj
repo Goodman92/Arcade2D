@@ -155,6 +155,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Debugger.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameComponent.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
@@ -165,7 +166,6 @@
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Testlevel.h" />
-    <ClInclude Include="Tilegenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

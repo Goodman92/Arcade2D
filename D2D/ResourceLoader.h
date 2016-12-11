@@ -29,6 +29,8 @@ namespace GoodmanEngine
 	}
 	
 	ID2D1Bitmap* ResourceLoader::loadImageFromFile(PCWSTR uri) {
+		//jee :D
+		m_pGraphics->CreateDeviceResources(m_pGraphics->m_hwnd);
 		HRESULT hr = S_OK;
 		IWICBitmapDecoder *pDecoder = NULL;
 		IWICBitmapFrameDecode *pSource = NULL;

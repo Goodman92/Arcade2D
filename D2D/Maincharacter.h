@@ -14,16 +14,13 @@ public:
 	Maincharacter(PCWSTR img);
 	void animate();
 	void resetAnimation();
-
 	void motion(std::string mot);
-	void stopMotion();
 	bool isWalking;
+	bool isJumping;
 private:
 	double jumptime;
 	void switchImage();
 	bool isDucking;
-	bool isJumping;
-	bool apu;
 	int direction;
 	void initializeSpriteFromFile();
 	void initializeAnimation();
@@ -36,28 +33,18 @@ private:
 
 Maincharacter::Maincharacter(PCWSTR img = L"") : Character(img), animationIndex(0) {
 	jumptime = 2000;
-	isDucking = isWalking = isJumping = apu =false;
+	isDucking = isWalking = isJumping =false;
 	initializeSpriteFromFile();
 	initializeAnimation();
 	switchImage();
 }
 
 void Maincharacter::motion(std::string mot) {
-	apu = true;
 	isDucking = mot == "duck" ? true : false;
 	isJumping = mot == "jump" ? true : false;
 	animationtimer.resetClock();
 	auto e = movements.find(mot);
 	setDim(stod(e->second[0]), stod(e->second[1]), stod(e->second[2]), stod(e->second[3]));
-}
-
-void Maincharacter::stopMotion() {
-	//isDucking = isJumping = false;
-	isDucking = false;
-	if(!isJumping) {
-		animationIndex = 0;
-		switchImage();
-	}
 }
 
 void Maincharacter::initializeSpriteFromFile() {
@@ -89,10 +76,10 @@ void Maincharacter::initializeAnimation() {
 
 void Maincharacter::resetAnimation() {
 	isWalking = isDucking = false;
-	if(!isJumping) {
+	//if(!isJumping) {
 		animationIndex = 0;
 		switchImage();
-	}
+	//}
 }
 
 void Maincharacter::animate() {
@@ -105,18 +92,6 @@ void Maincharacter::animate() {
 		else {
 			animationIndex = 0;
 		}
-	}
-
-	if (animationtimer.delta() <= 1) {
-		if (isJumping) {
-			y -= 4.0f;
-			animationtimer.clockTick();
-		}
-		else {
-			isJumping = false;
-			animationtimer.resetClock();
-		}
-		
 	}
 }
 
