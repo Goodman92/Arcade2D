@@ -13,7 +13,7 @@ class Maincharacter : public Character {
 public:
 	Maincharacter(PCWSTR img);
 	void animate();
-	void resetAnimation();
+	void resetAnimation(std::string motion);
 	void motion(std::string mot);
 	bool isWalking;
 	bool isJumping;
@@ -74,12 +74,17 @@ void Maincharacter::initializeAnimation() {
 	}
 }
 
-void Maincharacter::resetAnimation() {
-	isWalking = isDucking = false;
-	//if(!isJumping) {
+void Maincharacter::resetAnimation(std::string motion) {
+	
+	if (motion == "duck")
+		isDucking = false;
+	if (motion == "walk")
+		isWalking = false;
+
+	if(!isJumping) {
 		animationIndex = 0;
 		switchImage();
-	//}
+	}
 }
 
 void Maincharacter::animate() {

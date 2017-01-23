@@ -166,6 +166,24 @@ LRESULT CALLBACK Game::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 			case WM_KEYDOWN:
 			{
 				auto key = engine->m_keyboard.handleInput(wParam);
+				if (key == KEYSTROKES::duck) {
+					OutputDebugString(L"duck! \n");
+
+				}
+				if (key == KEYSTROKES::right) {
+					OutputDebugString(L"right! \n");
+
+				}
+				if (key == KEYSTROKES::jump) {
+					OutputDebugString(L"jump! \n");
+
+				}
+				if (key == KEYSTROKES::left) {
+					OutputDebugString(L"left! \n");
+				}
+				if (key == KEYSTROKES::multikeys) {
+					OutputDebugString(L"multikeys! \n");
+				}
 				if (key == KEYSTROKES::multikeys) {
 					engine->m_level->handleMultiKeyStrokes(engine->m_keyboard.getPressedKeys());
 				}

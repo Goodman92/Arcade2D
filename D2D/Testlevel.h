@@ -34,84 +34,57 @@ Testlevel::Testlevel() : Baselevel(), m_map(0.0f, 0.0f, L"bg_shroom.png"), m_mai
 
 void Testlevel::run() {
 	m_scene.update();
-	m_map.getDimensions().x;
 	float horizontalMovementInTiles = m_map.m_placement.m_x / 70.0;
-	float verticalMovementInTiles = m_maincharacter.m_placement.y / 70.0;
+	float verticalMovementInTiles = (m_maincharacter.m_placement.y + 97) / 70.0;
 	std::wstring ws;
-	WCHAR buf[] = L"textiiiiiiiiiiiIIIIIII";
-	_itow_s(ceil(horizontalMovementInTiles), buf, sizeof(buf) / sizeof(WCHAR), 10);
-	ws.append(buf);
-	ws.append(L" | ");
-	_itow_s(ceil(verticalMovementInTiles) + 1, buf, sizeof(buf) / sizeof(WCHAR), 10);
-	ws.append(buf);
-	ws.append(L" | ");
 
-	int hasTile = m_map.hasTile((int)round(verticalMovementInTiles) + 1, (int)round(horizontalMovementInTiles));
+	float tileSurface = 70 * ((int)ceil(verticalMovementInTiles));
+	float characterFloor = m_maincharacter.m_placement.y + 97;
+	int hasTile = m_map.hasTile((int)ceil(verticalMovementInTiles), (int)round(horizontalMovementInTiles));
 
-	float tileSurface = 70 * ((int)round(verticalMovementInTiles) + 1);
-
-	if (hasTile == 0 && !m_maincharacter.isJumping) {
-		_itow_s((int)tileSurface, buf, sizeof(buf) / sizeof(WCHAR), 10);
-		ws.append(buf);
-
-		ws.append(L" tilesurf!!! \n");
-
-		ws.append(buf);
+	if (hasTile == 1 && characterFloor < tileSurface && !m_maincharacter.isJumping) {
 		time += 0.1f;
 		float distance = 0.5 * 9.81 * time*time; // d = 0.5 * g * t^2
-		m_maincharacter.m_placement.y += distance;
-		/*
-		int hasTile = m_map.hasTile((int)round(m_maincharacter.m_placement.y / 70.0) + 1, (int)round(horizontalMovementInTiles));
-		if (hasTile == 1) {
-			float distance = 0.5 * 9.81 * time*time;
-			float tileSurface = 70 * ((int)round(m_maincharacter.m_placement.y / 70.0) + 1);
+		float sum = m_maincharacter.m_placement.y + distance;
 
-			if (m_maincharacter.m_placement.y + distance > tileSurface) {
-				m_maincharacter.m_placement.y = tileSurface;
-			}
+		if (characterFloor + distance > tileSurface) {
+			m_maincharacter.m_placement.y += tileSurface - characterFloor;
+		} 
+		else {
+			m_maincharacter.m_placement.y += distance;
 		}
-		float tileSurface = 70 * ((int)round(verticalMovementInTiles) + 1);
-
-		*/
-		//hyppyvoima = 50N
-		// Ep = mgh
-		// Ek = 1/2 * mv^2
-		// Ep - Ek = 0
 	}
-	else
+	else if (hasTile == 0 && !m_maincharacter.isJumping) {
+		time += 0.1f;
+		float distance = 0.5 * 9.81 * time*time; // d = 0.5 * g * t^2
+		float sum = m_maincharacter.m_placement.y + distance;
+		m_maincharacter.m_placement.y += distance;
+	}
+	else {
 		time = 0.0;
+	}
 
 	if (m_maincharacter.isJumping) {
 		time2 += 0.1f;
 		float height = 12 * time2 - 0.5 * 9.81 * time2 * time2; // y = v0t - 0.5gt^2
 		m_maincharacter.m_placement.y -= height;
-		_itow_s((int)height, buf, sizeof(buf) / sizeof(WCHAR), 10);
-		ws.append(buf);
-		ws.append(L" jumping!!! \n");
-		
 		float horizontalMovementInTiles = m_map.m_placement.m_x / 70;
-		float verticalMovementInTiles = m_maincharacter.m_placement.y / 70;
-
-		int hasTile = m_map.hasTile((int)round(verticalMovementInTiles), (int)round(horizontalMovementInTiles));
+		float verticalMovementInTiles = (m_maincharacter.m_placement.y + 97) / 70;
+		int hasTile = m_map.hasTile((int)floor(verticalMovementInTiles), (int)ceil(horizontalMovementInTiles));
 		
-
-		if (tileSurface && hasTile == 1) {
+		if (hasTile == 1) {
 			m_maincharacter.isJumping = false;
+			m_maincharacter.m_placement.y = (int)floor(verticalMovementInTiles) * 70 - 97;
 		}
 		
 	}
-	else
+	else {
 		time2 = 0.0;
+	}
 
-
-	_itow_s(hasTile, buf, sizeof(buf) / sizeof(WCHAR), 10);
-	ws.append(buf);
-	ws.append(L" <- has tile\n");
 
 	const WCHAR* jq = ws.c_str();
 	OutputDebugString(jq);
-
-
 
 	/*
 	m_scene.startDrawing();
@@ -141,12 +114,12 @@ void Testlevel::handleKeyStroke(KEYSTROKES key) {
 void Testlevel::checkKeys(KEYSTROKES key) {
 	switch (key) {
 		case KEYSTROKES::left:
-			m_map.setHorizontalPosition(-6.5f);
+			m_map.setHorizontalPosition(-4.5f);
 			m_maincharacter.isWalking = m_map.isScrolling = true;
 			break;
 
 		case KEYSTROKES::right:
-			m_map.setHorizontalPosition(6.5f);
+			m_map.setHorizontalPosition(4.5f);
 			m_maincharacter.isWalking = m_map.isScrolling = true;
 			break;
 
@@ -164,13 +137,15 @@ void Testlevel::handleRelease(int key) {
 	switch (key) {
 	case KEYSTROKES::left:
 	case KEYSTROKES::right:
-		m_maincharacter.resetAnimation();
+		m_maincharacter.resetAnimation("walk");
 		m_maincharacter.isWalking = m_map.isScrolling = false;
 		break;
 
 	case KEYSTROKES::duck:
+		m_maincharacter.resetAnimation("duck");
+		break;
 	case KEYSTROKES::jump:
-		m_maincharacter.resetAnimation();
+		m_maincharacter.resetAnimation("jump");
 		break;
 	}
 }

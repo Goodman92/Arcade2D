@@ -4,7 +4,7 @@ int jee[7][9] =
 {
 	{ 0, 0, 0, 1, 1, 0, 1, 0, 0 },
 	{ 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+	{ 0, 1, 0, 0, 0, 0, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 1, 1, 0, 0, 0, 0, 0, 0, 0 },
 	{ 1, 1, 1, 1, 1, 0, 0, 0, 0 },
@@ -57,6 +57,8 @@ private:
 
 void Map::animate() {
 	initializeTiles();
+	if (isScrolling)
+		scroll();
 }
 
 ComponentPlacement Map::getDimensions() {
@@ -129,7 +131,6 @@ void Map::scroll() {
 void Map::setHorizontalPosition(float x) {
 	scrollDirection = x;
 	isScrolling = true;
-	scroll();
 }
 
 void Map::setVerticalPosition(float y) {
