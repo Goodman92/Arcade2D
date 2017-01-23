@@ -1,5 +1,6 @@
 #pragma once
 
+//testi mappi
 int jee[7][9] =
 {
 	{ 0, 0, 0, 1, 1, 0, 1, 0, 0 },
