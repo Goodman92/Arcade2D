@@ -67,7 +67,7 @@ HRESULT Game::Initialize()
 
 		m_pGraphics->m_hwnd = CreateWindow(
 			L"GoodmanEngine",
-			L"paskaap",
+			L"MyGame",
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
